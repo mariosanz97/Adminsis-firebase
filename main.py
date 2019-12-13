@@ -17,16 +17,17 @@ db = firebase.database()
 user = ""
 
 def add(user):
-  c = input('clave:')
+  c = db.generate_key()
   v = input('valor:')
   data = {c: v}
-  #db.child("Users").child(user['email']).set(data, user['idToken'])
   print(user['email'])
   path = str(user['email']).split("@")
   import re
   line = re.sub(r'[^\w]', '', path[0])
   print(line)
-  db.child("Users").child(line).set(data, user['idToken'])
+
+  db.child("Users").child(line).update(data, user['idToken'])
+
   print("añadido correctamente")
 
 
@@ -68,8 +69,9 @@ def login():
   print("Login con email y usuario")
   email = input('Please enter email: ')
   passw = input('Please enter your passwprd: ')
-  user = auth.sign_in_with_email_and_password(email, passw)
-  #user = auth.sign_in_with_email_and_password("marios.sanzs@gmail.com", "123456")
+  #user = auth.sign_in_with_email_and_password(email, passw)
+  user = auth.sign_in_with_email_and_password("marios.sanzs@gmail.com", "123456")
+  #user = auth.sign_in_with_email_and_password("mario.s_97@hotmail.com", "123456")
   print(user)
   acciones(user)
 
