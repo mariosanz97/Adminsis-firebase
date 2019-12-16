@@ -69,28 +69,97 @@ def delete(user):
   c = input('Id para borrar: ')
   db.child("Users").child(line).child(c).remove(user['idToken'])
 
+
+"""
+·······································API··········································
+"""
+
+
+import requests
+def getinfoAPI(user):
+  response = requests.get('https://adminsis-50e2e.firebaseio.com/Users.json?auth='+user['idToken'])
+  print(response.json())
+
+def crearRamaApi(user):
+  path = str(user['email']).split("@")
+  import re
+  line = re.sub(r'[^\w]', '', path[0])
+
+  c = input('clave: ')
+  d = input('valor: ')
+  response = requests.post('https://adminsis-50e2e.firebaseio.com/Users/'+line+'.json?auth='+user['idToken'], data='{"'+c+'":"'+d+'"}')
+  print(response.text)
+
+def AddRamaApi(user):
+  path = str(user['email']).split("@")
+  import re
+  line = re.sub(r'[^\w]', '', path[0])
+
+  d = input('valor: ')
+  response = requests.patch('https://adminsis-50e2e.firebaseio.com/Users/'+line+'.json?auth='+user['idToken'], data='{"'+db.generate_key()+'":"'+d+'"}')
+  print(response.text)
+
+def AddRamaApiCon_clave(user):
+  path = str(user['email']).split("@")
+  import re
+  line = re.sub(r'[^\w]', '', path[0])
+
+  c = input('clave: ')
+  d = input('valor: ')
+  response = requests.patch('https://adminsis-50e2e.firebaseio.com/Users/'+line+'.json?auth='+user['idToken'], data='{"'+c+'":"'+d+'"}')
+  print(response.text)
+
+def UpdateRamaApi(user):
+  path = str(user['email']).split("@")
+  import re
+  line = re.sub(r'[^\w]', '', path[0])
+
+  d = input('Clave del valor que quieres modificar: ')
+  v = input('valor: ')
+  response = requests.patch('https://adminsis-50e2e.firebaseio.com/Users/'+line+'.json?auth='+user['idToken'], data='{"'+d+'":"'+v+'"}')
+  print(response.text)
+
+
+def deleteApi(user):
+  path = str(user['email']).split("@")
+  import re
+  line = re.sub(r'[^\w]', '', path[0])
+
+  d = input('Clave del valor que quieres modificar: ')
+  response = requests.delete('https://adminsis-50e2e.firebaseio.com/Users/'+line+'/'+d+'.json?auth='+user['idToken'])
+  print(response.text)
+
 def acciones(user):
   x=True
   while(x==True):
     print("1 Mostrar datos")
     print("2 Crear rama con tu propia clave")
-    print("3 Añadir dato")
-    print("4 Modificar Datos")
-    print("5 Eliminar Datos")
-    print("6 Salir")
+    print("3 Añadir dato clave auto")
+    print("4 Añadir dato propia clave")
+    print("5 Modificar Datos")
+    print("6 Eliminar Datos")
+    print("7 Salir")
     option = input('Elige opcion: ')
     if (option == '1'):
-      getinfo(user)
+      #getinfo(user)
+      getinfoAPI(user)
     if (option == '2'):
-      add_key(user)
+      crearRamaApi(user)
+      #add_key(user)
     if (option == '3'):
-      add(user)
+      AddRamaApi(user)
+      #add(user)
     if (option == '4'):
-      update(user)
+      AddRamaApiCon_clave(user)
+      #update(user)
     if (option == '5'):
-      delete(user)
+      UpdateRamaApi(user)
     if (option == '6'):
+      #delete(user)
+      deleteApi(user)
+    if (option == '7'):
       x = False
+      SystemExit(0)
 
 def registro():
   print("Registrate con email y usuario")
@@ -107,7 +176,7 @@ def login():
   user = auth.sign_in_with_email_and_password(email, passw)
   #user = auth.sign_in_with_email_and_password("marios.sanzs@gmail.com", "123456")
   #user = auth.sign_in_with_email_and_password("mario.s_97@hotmail.com", "123456")
-  print(user)
+  #print(user)
   acciones(user)
 
 
@@ -116,7 +185,7 @@ while(x==True):
   if(auth.current_user==None):
     print("1 Registrarse")
     print("2 Logearse")
-    print("3 Falir")
+    print("3 Salir")
     option = input('Elige opcion: ')
     if(option=='1'):
       registro()
@@ -124,6 +193,7 @@ while(x==True):
       login()
     if(option=='3'):
       x=False
+      SystemExit(0)
 
 
 
