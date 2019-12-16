@@ -31,30 +31,65 @@ def add(user):
   print("añadido correctamente")
 
 
-def getinfo(user):
-  users = db.child("Users").get(user['idToken'])
-  print(users.val())
+def add_key(user):
+  c = input('clave: ')
+  v = input('valor: ')
+  data = {c: v}
+  print(user['email'])
+  path = str(user['email']).split("@")
+  import re
+  line = re.sub(r'[^\w]', '', path[0])
+  print(line)
 
+  db.child("Users").child(line).update(data, user['idToken'])
+
+  print("añadido correctamente")
+
+def getinfo(user):
+  all_users = db.child("Users").get(user['idToken'])
+  for user in all_users.each():
+    print(user.key())  # Morty
+    print(user.val())  # {name": "Mortimer 'Morty' Smith"}
+
+
+def update(user):
+  c = input('Id para modificar: ')
+  d = input('valor: ')
+
+  path = str(user['email']).split("@")
+  import re
+  line = re.sub(r'[^\w]', '', path[0])
+
+  db.child("Users").child(line).update({c: d}, user['idToken'])
+
+def delete(user):
+  path = str(user['email']).split("@")
+  import re
+  line = re.sub(r'[^\w]', '', path[0])
+  c = input('Id para borrar: ')
+  db.child("Users").child(line).child(c).remove(user['idToken'])
 
 def acciones(user):
   x=True
   while(x==True):
-    print("0 Mostrar datos")
-    print("1 Añadir dato")
-    print("2 Modificar Datos")
-    print("3 Eliminar Datos")
+    print("1 Mostrar datos")
+    print("2 Crear rama con tu propia clave")
+    print("3 Añadir dato")
+    print("4 Modificar Datos")
+    print("5 Eliminar Datos")
+    print("6 Salir")
     option = input('Elige opcion: ')
-    if (option == '0'):
-      getinfo(user)
     if (option == '1'):
-      add(user)
+      getinfo(user)
     if (option == '2'):
-      #update()
-      print("update")
+      add_key(user)
     if (option == '3'):
-      print("delete")
-      #delete()
-    if (option == '3'):
+      add(user)
+    if (option == '4'):
+      update(user)
+    if (option == '5'):
+      delete(user)
+    if (option == '6'):
       x = False
 
 def registro():
@@ -69,8 +104,8 @@ def login():
   print("Login con email y usuario")
   email = input('Please enter email: ')
   passw = input('Please enter your passwprd: ')
-  #user = auth.sign_in_with_email_and_password(email, passw)
-  user = auth.sign_in_with_email_and_password("marios.sanzs@gmail.com", "123456")
+  user = auth.sign_in_with_email_and_password(email, passw)
+  #user = auth.sign_in_with_email_and_password("marios.sanzs@gmail.com", "123456")
   #user = auth.sign_in_with_email_and_password("mario.s_97@hotmail.com", "123456")
   print(user)
   acciones(user)
