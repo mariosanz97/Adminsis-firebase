@@ -78,7 +78,9 @@ def delete(user):
 import requests
 def getinfoAPI(user):
   response = requests.get('https://adminsis-50e2e.firebaseio.com/Users.json?auth='+user['idToken'])
-  print(response.json())
+  import json
+  json_string = json.dumps(response.json(), indent=4)
+  print(json_string)
 
 def crearRamaApi(user):
   path = str(user['email']).split("@")
@@ -134,8 +136,8 @@ def acciones(user):
   while(x==True):
     print("1 Mostrar datos")
     print("2 Crear rama con tu propia clave")
-    print("3 Añadir dato clave auto")
-    print("4 Añadir dato propia clave")
+    print("3 Añadir dato con clave automatica")
+    print("4 Añadir dato con una clave propia")
     print("5 Modificar Datos")
     print("6 Eliminar Datos")
     print("7 Salir")
@@ -158,8 +160,8 @@ def acciones(user):
       #delete(user)
       deleteApi(user)
     if (option == '7'):
-      x = False
       SystemExit(0)
+      x = False
 
 def registro():
   print("Registrate con email y usuario")
