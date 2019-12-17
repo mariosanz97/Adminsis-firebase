@@ -160,7 +160,8 @@ def acciones(user):
       #delete(user)
       deleteApi(user)
     if (option == '7'):
-      SystemExit(0)
+      import sys
+      sys.exit(0)
       x = False
 
 def registro():
